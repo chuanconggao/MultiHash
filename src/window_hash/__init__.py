@@ -1,4 +1,4 @@
-from typing import Callable, TypeAlias
+from typing import Any, Callable, TypeAlias
 
 from .conditions import ConditionType
 
@@ -17,9 +17,11 @@ class WindowHash:
         self,
         hash_func: Callable[..., _Hash],
         conditions: tuple[ConditionType],
+        data_func: Callable[[Any], Buffer] | None = None,
     ):
         self.__hash_func = hash_func
         self.__conditions = conditions
+        self.__data_func = data_func
 
         self.__reset()
 
@@ -54,12 +56,12 @@ class WindowHash:
 
         return old_hash_value
 
-    def update(self, data: Buffer) -> tuple[None | str, ...]:
+    def update(self, data: Any) -> tuple[None | str, ...]:
         return tuple(
             self.__update_single(
                 i,
                 condition,
-                data,
+                self.__data_func(data) if self.__data_func else data,
             )
             for i, condition in enumerate(
                 self.__conditions,
