@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
-from typing import Callable
+from typing import Any, Callable
 
-Buffer = bytes
+ConditionType = Callable[[list[Any]], bool]
 
-ConditionType = Callable[[list[Buffer]], bool]
-
-_DateTimeFuncType = Callable[[Buffer], datetime]
+_DateTimeFuncType = Callable[[Any], datetime]
 
 
 def get_total_size_condition(size: int) -> ConditionType:

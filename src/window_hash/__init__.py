@@ -39,19 +39,21 @@ class WindowHash:
         self,
         i: int,
         condition: ConditionType,
-        data: Buffer,
+        data: Any,
     ) -> Optional[str]:
         hash: _Hash = self.__hash_cache[i]
-        hash_data: list[Buffer] = self.__hash_data[i]
+        hash_data: list[Any] = self.__hash_data[i]
+
+        hashable_data: Buffer = self.__data_func(data) if self.__data_func else data
 
         hash_data.append(data)
         if condition(hash_data):
-            hash.update(data)
+            hash.update(hashable_data)
             return None
 
         old_hash_value: str = hash.hexdigest()
 
-        self.__hash_cache[i] = self.__hash_func(data)
+        self.__hash_cache[i] = self.__hash_func(hashable_data)
         self.__hash_data[i] = [data]
 
         return old_hash_value
@@ -61,7 +63,7 @@ class WindowHash:
             self.__update_single(
                 i,
                 condition,
-                self.__data_func(data) if self.__data_func else data,
+                data,
             )
             for i, condition in enumerate(
                 self.__conditions,
