@@ -1,8 +1,8 @@
-from typing import Any, Callable, TypeAlias
+from typing import Any, Callable, Optional
 
 from .conditions import ConditionType
 
-Buffer: TypeAlias = bytes
+Buffer = bytes
 
 
 # Cannot import private class `_Hash` from hashlib
@@ -17,7 +17,7 @@ class WindowHash:
         self,
         hash_func: Callable[..., _Hash],
         conditions: tuple[ConditionType],
-        data_func: Callable[[Any], Buffer] | None = None,
+        data_func: Optional[Callable[[Any], Buffer]] = None,
     ):
         self.__hash_func = hash_func
         self.__conditions = conditions
@@ -40,7 +40,7 @@ class WindowHash:
         i: int,
         condition: ConditionType,
         data: Buffer,
-    ) -> None | str:
+    ) -> Optional[str]:
         hash: _Hash = self.__hash_cache[i]
         hash_data: list[Buffer] = self.__hash_data[i]
 
@@ -56,7 +56,7 @@ class WindowHash:
 
         return old_hash_value
 
-    def update(self, data: Any) -> tuple[None | str, ...]:
+    def update(self, data: Any) -> tuple[Optional[str], ...]:
         return tuple(
             self.__update_single(
                 i,

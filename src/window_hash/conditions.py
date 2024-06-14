@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
-from typing import Callable, TypeAlias
+from typing import Callable
 
-Buffer: TypeAlias = bytes
+Buffer = bytes
 
-ConditionType: TypeAlias = Callable[[list[Buffer]], bool]
+ConditionType = Callable[[list[Buffer]], bool]
 
-_DateTimeFuncType: TypeAlias = Callable[[Buffer], datetime]
+_DateTimeFuncType = Callable[[Buffer], datetime]
 
 
 def get_size_condition(size: int) -> ConditionType:
