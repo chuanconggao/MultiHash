@@ -8,6 +8,10 @@ ConditionType = Callable[[list[Buffer]], bool]
 _DateTimeFuncType = Callable[[Buffer], datetime]
 
 
+def get_total_size_condition(size: int) -> ConditionType:
+    return lambda data: sum(len(d) for d in data) <= size
+
+
 def get_size_condition(size: int) -> ConditionType:
     return lambda data: len(data) <= size
 
